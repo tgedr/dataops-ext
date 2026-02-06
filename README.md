@@ -41,7 +41,7 @@ data operations related code - extended
 - Clone the repository like this:
 
   ``` bash
-  git clone git@github.com:jtviegas/dataops-ext
+  git clone git@github.com:tgedr/dataops-ext
   ```
 - cd into the folder: `cd dataops-ext`
 - install requirements: `./helper.sh reqs`
