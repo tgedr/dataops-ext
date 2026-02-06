@@ -2480,7 +2480,7 @@ wheels = [
 
 [[package]]
 name = "tgedr-dataops"
-version = "1.0.1"
+version = "1.0.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "boto3" },
@@ -2490,9 +2490,9 @@ dependencies = [
     { name = "s3fs" },
     { name = "tgedr-dataops-abs" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/71/0f/11879e8de50653217b617344f494e4a4d010e3280ccb94116909f23bf5a4/tgedr_dataops-1.0.1.tar.gz", hash = "sha256:a44dd056ef728811a84425d7325ed19e3be8ced1198d3806a39f11403b0ea5f5", size = 15845, upload-time = "2026-02-06T08:58:44.907Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/94/0a/aed56b6afdad432557cf95482f9a35de897e3f4396743b4e0a78398b8587/tgedr_dataops-1.0.3.tar.gz", hash = "sha256:6aa8c673f8ffeaf2a4957fe0ee4a9b21e8572edc5a3f6d92cf93a71b70cffe90", size = 17308, upload-time = "2026-02-06T13:44:55.204Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d3/ff/5636d8224de1edd8e76671047aab8dc5640ba1a8ad8cbf9b9e5b5c5e2a1d/tgedr_dataops-1.0.1-py3-none-any.whl", hash = "sha256:a37e3747fb2072249d6f4de258cd61d6b022769cc562b0e8b2a0a14f4b4aca17", size = 22335, upload-time = "2026-02-06T08:58:43.661Z" },
+    { url = "https://files.pythonhosted.org/packages/34/51/2661d4542b82f3c65478a766d6b519d87545e042ded5834cb10add5fd01c/tgedr_dataops-1.0.3-py3-none-any.whl", hash = "sha256:9138dba4580c06a6ec66ad700d3e5adaddc86438aa866d2898eb353c4b6ad444", size = 24620, upload-time = "2026-02-06T13:44:57.144Z" },
 ]
 
 [[package]]
@@ -2509,7 +2509,7 @@ wheels = [
 
 [[package]]
 name = "tgedr-dataops-ext"
-version = "0.0.1"
+version = "0.0.2"
 source = { editable = "." }
 dependencies = [
     { name = "delta-spark" },
@@ -2539,7 +2539,7 @@ requires-dist = [
     { name = "deltalake", specifier = "~=0.16.4" },
     { name = "pandas", specifier = ">=2.3.0" },
     { name = "pyspark", specifier = "~=3.4.0" },
-    { name = "tgedr-dataops", specifier = ">=1.0.1" },
+    { name = "tgedr-dataops", specifier = ">=1.0.3" },
 ]
 
 [package.metadata.requires-dev]

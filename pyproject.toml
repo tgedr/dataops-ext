@@ -1,6 +1,6 @@
 [project]
 name = "tgedr-dataops-ext"
-version = "0.0.1"
+version = "0.0.2"
 description = "this is a template for a python package"
 authors = [
     {name = "developer",email = "developer@email.com"}
@@ -12,8 +12,8 @@ dependencies = [
     "pandas>=2.3.0",
     "deltalake~=0.16.4",
     "delta-spark~=2.4.0",
-    "tgedr-dataops>=1.0.1",
-    "pyspark~=3.4.0"
+    "tgedr-dataops>=1.0.3",
+    "pyspark~=3.4.0",
 ]
 [dependency-groups]
 dev = [
