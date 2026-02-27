@@ -22,7 +22,7 @@ class UtilsSpark:
     """class with handy functions to work with spark."""
 
     __ENV_KEY_PYSPARK_IS_LOCAL = "PYSPARK_IS_LOCAL"
-    __ENV_KEY_NOT_AWS_CLOUD = "NOT_AWS_CLOUD"
+    __ENV_KEY_PYSPARK_IS_AWS = "PYSPARK_IS_AWS"
     __DTYPES_MAP: ClassVar[dict[str, type]] = {
         "bigint": T.LongType,
         "string": T.StringType,
@@ -84,13 +84,12 @@ class UtilsSpark:
         if "1" == os.getenv(UtilsSpark.__ENV_KEY_PYSPARK_IS_LOCAL):
             spark: SparkSession = UtilsSpark.get_local_spark_session(config)
         else:
-            if "1" == os.getenv(UtilsSpark.__ENV_KEY_NOT_AWS_CLOUD):
-                active_session = SparkSession.getActiveSession()
-            else:
+            if "1" == os.getenv(UtilsSpark.__ENV_KEY_PYSPARK_IS_AWS):
                 from awsglue.context import GlueContext  # type: ignore #   pragma: no cover  # noqa: PGH003
-
                 glueContext = GlueContext(SparkContext.getOrCreate())  #   pragma: no cover  # noqa: N806
                 active_session = glueContext.spark_session  #   pragma: no cover
+            else:
+                active_session = SparkSession.getActiveSession()
 
             spark_config = SparkConf()
 
