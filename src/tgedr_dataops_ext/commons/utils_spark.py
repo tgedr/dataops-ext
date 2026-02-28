@@ -50,7 +50,7 @@ class UtilsSpark:
         logger.debug(f"[get_local_spark_session|in] ({config})")
         # PySpark 3.4 uses Scala 2.12, so we need delta-core_2.12
         builder = (
-            SparkSession.builder.config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0")
+            SparkSession.builder.config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0") # pyright: ignore[reportAttributeAccessIssue]
             .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
             .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
             .config("spark.driver.host", "localhost")
@@ -100,9 +100,9 @@ class UtilsSpark:
             if config is not None:
                 for k, v in config.items():
                     spark_config.set(k, v)
-                spark: SparkSession = SparkSession.builder.config(conf=spark_config).getOrCreate()
+                spark: SparkSession = SparkSession.builder.config(conf=spark_config).getOrCreate() # pyright: ignore[reportAttributeAccessIssue]
             else:
-                spark: SparkSession = SparkSession.builder.getOrCreate()
+                spark: SparkSession = SparkSession.builder.getOrCreate() # pyright: ignore[reportAttributeAccessIssue]
 
         logger.debug(f"[get_spark_session|out] => {spark}")
         return spark

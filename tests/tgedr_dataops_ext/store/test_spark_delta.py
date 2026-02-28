@@ -184,6 +184,26 @@ def test_09_set_column_comments(environment_mock, spark, tmp_dir):
     assert "unique id's" == row["comment"]
 
 
+
+def test_09b_save_with_table_name_and_column_descriptions(environment_mock, spark, tmp_dir):
+    """Test save with both table_name and column_descriptions calls set_column_comments."""
+    df = spark.createDataFrame([
+        Row(id=1, country="us", region="america"),
+    ])
+
+    o = SparkDeltaStore()
+    o.save(
+        df=df,
+        key=tmp_dir,
+        partition_fields=["region"],
+        table_name="dummy.test_09b",
+        column_descriptions={"id": "unique identifier", "country": "country code"},
+    )
+
+    id_description = spark.sql("describe dummy.test_09b").filter(F.col("col_name") == "id")
+    assert id_description.collect()[0].asDict()["comment"] == "unique identifier"
+
+
 def test_10_schema_change(environment_mock, data, tmp_dir):
     o = SparkDeltaStore()
     o.save(df=data, key=tmp_dir)

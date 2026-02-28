@@ -24,6 +24,12 @@ def test_not_aws_spark(environment_mock_another):
     assert "6g" == o.conf.get("spark.driver.memory")
 
 
+def test_not_aws_spark_no_config(environment_mock_another):
+    # Exercises the else branch at line 105: no config passed, no AWS env
+    o = UtilsSpark.get_spark_session()
+    assert type(o) == SparkSession
+
+
 def test_buidl_schema_from_dtypes():
     expected = T.StructType(
         [

@@ -1,7 +1,7 @@
 name: pipeline
 
 env:
-  TEST_COVERAGE_THRESHOLD: 98
+  TEST_COVERAGE_THRESHOLD: 100
 
 on:
   push:

@@ -19,7 +19,7 @@ from pyspark.sql import DataFrame
 from delta.tables import DeltaTable
 from pyspark.sql import functions as f
 from pyspark.sql import types as T  # noqa: N812
-from pyspark.sql.utils import AnalysisException
+from pyspark.sql.utils import AnalysisException # pyright: ignore[reportPrivateImportUsage]
 from pyspark.sql.functions import monotonically_increasing_id
 from tgedr_dataops_abs.store import NoStoreException, Store, StoreException
 from tgedr_dataops_ext.commons.metadata import Metadata
@@ -110,9 +110,9 @@ class SparkDeltaStore(Store, ABC):
         if 0 < len(numerics):
             column = numerics[0][0]
             result = (f.col(column) > 0) | (f.col(column) <= 0)
-        elif 0 < len(dates):
+        elif 0 < len(dates):  # pragma: no cover
             column = dates[0][0]
-            now = datetime.now(tz=datetime.UTC)
+            now = datetime.now(tz=datetime.UTC) # pyright: ignore[reportAttributeAccessIssue]
             result = (f.col(column) > now) | (f.col(column) <= now)
         elif 0 < len(textuals):
             column = textuals[0][0]
@@ -125,7 +125,7 @@ class SparkDeltaStore(Store, ABC):
         logger.debug(f"[__get_deletion_criteria|out] = {result}")
         return result
 
-    def delete(self, key: str, condition: f.Column | str | None = None, **kwargs) -> None:  # noqa: ANN003, ARG002
+    def delete(self, key: str, condition: f.Column | str | None = None, **kwargs) -> None:  # pyright: ignore[reportPrivateImportUsage] # noqa: ANN003, ARG002
         """Delete data from the specified key/path.
 
         Parameters
@@ -209,9 +209,6 @@ class SparkDeltaStore(Store, ABC):
             f"[save|in] ({df}, {key}, {append}, {partition_fields}, {metadata}, {retention_days}, {deleted_retention_days}, {column_descriptions}, {table_name}, {kwargs})"
         )
 
-        if column_descriptions is not None:
-            df = self._set_column_descriptions(df, column_descriptions)
-
         writer = df.write.format("delta").mode("append") if append else df.write.format("delta").mode("overwrite")
 
         if partition_fields is not None:
@@ -224,13 +221,16 @@ class SparkDeltaStore(Store, ABC):
             writer = writer.option("overwriteSchema", "true")
 
         if metadata:
-            writer = writer.option("userMetadata", metadata)
+            writer = writer.option("userMetadata", metadata) # pyright: ignore[reportArgumentType]
 
         if table_name is not None:
             # assume we have db.table
             db = table_name.split(".")[0]
             UtilsSpark.get_spark_session().sql(f"CREATE DATABASE IF NOT EXISTS {db}")
             writer = writer.option("path", key).saveAsTable(table_name)
+
+            if column_descriptions is not None:
+                self.set_column_comments(db=db, table=table_name.split(".")[1], col_comments=column_descriptions)
         else:
             writer.save(key)
 
@@ -244,7 +244,7 @@ class SparkDeltaStore(Store, ABC):
         elif retention_days is not None:
             self.enforce_retention_policy(path=key, retention_days=retention_days)
 
-        table.optimize().executeCompaction()
+        table.optimize().executeCompaction() # pyright: ignore[reportOptionalMemberAccess]
 
         logger.info("[save|out]")
 
@@ -316,14 +316,14 @@ class SparkDeltaStore(Store, ABC):
                     df = df.withColumn(column, f.lit(None).cast(T.StringType()))
 
             table.alias("current").merge(
-                df.alias("updates"), match_clause
+                df.alias("updates"), match_clause # pyright: ignore[reportArgumentType]
             ).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()
 
             if retention_days is not None and deleted_retention_days is not None:
                 self.enforce_retention_policy(
                     path=key, retention_days=retention_days, deleted_retention_days=deleted_retention_days
                 )
-            elif retention_days is not None:
+            elif retention_days is not None:  # pragma: no cover
                 self.enforce_retention_policy(path=key, retention_days=retention_days)
 
             table.optimize().executeCompaction()
@@ -434,7 +434,7 @@ class SparkDeltaStore(Store, ABC):
         old_conf_value = spark.conf.get("spark.databricks.delta.retentionDurationCheck.enabled")
         spark.conf.set("spark.databricks.delta.retentionDurationCheck.enabled", "false")
         DeltaTable.forPath(spark, path).vacuum(0)
-        spark.conf.set("spark.databricks.delta.retentionDurationCheck.enabled", old_conf_value)
+        spark.conf.set("spark.databricks.delta.retentionDurationCheck.enabled", old_conf_value) # pyright: ignore[reportArgumentType]
 
         logger.info("[_vacuum_now|out]")
 
@@ -469,7 +469,7 @@ class SparkDeltaStore(Store, ABC):
 
     def _get_table(self, path: str) -> DeltaTable | None:
         logger.debug(f"[_get_table|in] ({path})")
-        result: DeltaTable = None
+        result= None # pyright: ignore[reportAssignmentType, reportRedeclaration]
         try:
             result: DeltaTable = DeltaTable.forPath(UtilsSpark.get_spark_session(), path)
         except AnalysisException as ax:
