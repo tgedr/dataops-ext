@@ -1,13 +1,17 @@
 # tgedr-dataops-ext
 
+> Concrete, tested implementations of the [tgedr-dataops](https://pypi.org/project/tgedr-dataops/) abstract contracts — PySpark, Delta Lake, and Databricks, all in one place.
+
 ![Coverage](./coverage.svg)
 [![PyPI](https://img.shields.io/pypi/v/tgedr-dataops-ext)](https://pypi.org/project/tgedr-dataops-ext/)
 
-Data operations library — extended.
+---
 
 ## motivation
 
 *tgedr-dataops-ext* builds on top of [*tgedr-dataops*](https://pypi.org/project/tgedr-dataops/) (the abstract contracts layer) and provides concrete, tested implementations for distributed data processing with PySpark and Delta Lake. It covers session management, ETL pipelines, Delta table storage, data validation, and Databricks job integration, all following consistent code quality and structural standards.
+
+---
 
 ## installation
 
@@ -15,9 +19,13 @@ Data operations library — extended.
 pip install tgedr-dataops-ext
 ```
 
+---
+
 ## package contents
 
 ### commons
+
+Shared utilities and base classes used across the library.
 
 | Class | Description | Example |
 |---|---|---|
@@ -29,23 +37,40 @@ pip install tgedr-dataops-ext
 
 ### quality
 
+Data quality validation backed by Great Expectations.
+
 | Class | Description | Example |
 |---|---|---|
 | `PysparkValidation` | `GreatExpectationsValidation` implementation for validating PySpark DataFrames using the Great Expectations library | [test](tests/tgedr_dataops_ext/quality/test_pyspark_validation.py) |
 
 ### source
 
+Implementations of the `Source` contract for reading data from various backends.
+
 | Class | Description | Example |
 |---|---|---|
 | `DeltaTableSource` | Abstract `Source` base class for reading Delta Lake datasets, returning a pandas DataFrame | [test](tests/tgedr_dataops_ext/source/test_delta_table_source.py) |
 | `LocalDeltaTable` | Concrete `Source` reading Delta Lake datasets from the local filesystem using pure Python (no PySpark required) | [test](tests/tgedr_dataops_ext/source/test_local_delta_table.py) |
 | `S3DeltaTable` | Concrete `Source` reading Delta Lake datasets from S3 using pure Python (no PySpark required) | [test](tests/tgedr_dataops_ext/source/test_s3_delta_table.py) |
+| `CatalogFileSource` | `Source` implementation for listing, copying, and retrieving metadata of files in a Databricks-accessible file system (DBFS, S3, ADLS) via `dbutils.fs` | [test](tests/tgedr_dataops_ext/source/test_catalog_file_source.py) |
+
+### sink
+
+Implementations of the `Sink` contract for writing and managing data in various backends.
+
+| Class | Description | Example |
+|---|---|---|
+| `CatalogFileSink` | `Sink` implementation for copying and deleting files or directories in a Databricks-accessible file system via `dbutils.fs` | [test](tests/tgedr_dataops_ext/sink/test_catalog_file_sink.py) |
 
 ### store
+
+Implementations of the `Store` contract for persistent, structured data storage.
 
 | Class | Description | Example |
 |---|---|---|
 | `SparkDeltaStore` | `Store` implementation for PySpark distributed processing with Delta Lake format. Supports versioned reads, append/overwrite writes, upserts, partitioning, schema evolution, retention policies, metadata management, and column comments | [test](tests/tgedr_dataops_ext/store/test_spark_delta.py) |
+
+---
 
 ## development
 
