@@ -47,7 +47,7 @@ class DeltaTableSource(Source, ABC):
 
         try:
             delta_table = DeltaTable(
-                table_uri=context[self.CONTEXT_KEY_URL], storage_options=self._storage_options, without_files=True
+                table_uri=context[self.CONTEXT_KEY_URL], storage_options=self._storage_options
             )
             result = delta_table.to_pandas(columns=columns)
         except TableNotFoundError as exc:

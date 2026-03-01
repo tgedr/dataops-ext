@@ -19,7 +19,7 @@ from pyspark.sql import DataFrame
 from delta.tables import DeltaTable
 from pyspark.sql import functions as f
 from pyspark.sql import types as T  # noqa: N812
-from pyspark.sql.utils import AnalysisException # pyright: ignore[reportPrivateImportUsage]
+from pyspark.errors import AnalysisException
 from pyspark.sql.functions import monotonically_increasing_id
 from tgedr_dataops_abs.store import NoStoreException, Store, StoreException
 from tgedr_dataops_ext.commons.metadata import Metadata
@@ -298,6 +298,7 @@ class SparkDeltaStore(Store, ABC):
         else:
             if partition_fields is not None:
                 self._set_table_partitions(path=key, partition_fields=partition_fields)
+                table = self._get_table(path=key)
 
             match_clause = None
             for field in match_fields:
@@ -396,33 +397,13 @@ class SparkDeltaStore(Store, ABC):
         logger.info(f"[get_metadata|out] => ({result})")
         return result
 
-    def _get_delta_log(self, path: str) -> DataFrame:
-        logger.info(f"[_get_delta_log|in] ({path})")
-
-        spark = UtilsSpark.get_spark_session()
-        jdf = (
-            spark._jvm.org.apache.spark.sql.delta.DeltaLog.forTable(spark._jsparkSession, path)  # noqa: SLF001
-            .snapshot()
-            .allFiles()
-            .toDF()
-        )
-        result = DataFrame(jdf, spark)
-
-        logger.info(f"[_get_delta_log|out] => {result}")
-        return result
-
     def _get_table_partitions(self, path: str) -> list[str]:
         logger.info(f"[_get_table_partitions|in] ({path})")
-        result: list[str] = []
 
-        delta_log: DataFrame = self._get_delta_log(path=path)
-        partition_keys = [
-            x.keys
-            for x in delta_log.select(f.map_keys(f.col("partitionValues")).alias("keys")).distinct().collect()
-            if 0 < len(x)
-        ]
-        if 0 < len(partition_keys):
-            result: list[str] = list({y for y in partition_keys for y in y})
+        spark = UtilsSpark.get_spark_session()
+        detail = DeltaTable.forPath(spark, path).detail()
+        partition_cols = detail.select("partitionColumns").collect()[0].partitionColumns
+        result: list[str] = list(partition_cols) if partition_cols else []
 
         logger.info(f"[_get_table_partitions|out] => {result}")
         return result

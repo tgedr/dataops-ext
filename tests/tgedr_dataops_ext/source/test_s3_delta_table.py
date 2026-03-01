@@ -46,7 +46,7 @@ def test_get(monkeypatch):
     key = "dummy"
 
     class MockS3DatasetDeltaTable:
-        def __init__(self, table_uri, storage_options, without_files):
+        def __init__(self, table_uri, storage_options):
             pass
 
         def to_pandas(self, columns=None):

@@ -10,10 +10,10 @@ requires-python = ">=3.11"
 
 dependencies = [
     "pandas>=2.3.0",
-    "deltalake~=0.16.4",
-    "delta-spark~=2.4.0",
+    "deltalake~=1.4",
+    "delta-spark~=4.0",
     "tgedr-dataops>=1.0.3",
-    "pyspark~=3.4.0",
+    "pyspark~=4.0",
 ]
 [dependency-groups]
 dev = [

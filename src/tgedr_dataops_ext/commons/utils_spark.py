@@ -13,6 +13,7 @@ from pyspark.sql import SparkSession
 from pyspark import SparkConf
 from pyspark.sql import types as T  # noqa: N812
 from pyspark.context import SparkContext
+from delta.pip_utils import configure_spark_with_delta_pip
 
 
 logger = logging.getLogger(__name__)
@@ -48,9 +49,8 @@ class UtilsSpark:
             A configured local Spark session instance with Delta Lake support.
         """
         logger.debug(f"[get_local_spark_session|in] ({config})")
-        # PySpark 3.4 uses Scala 2.12, so we need delta-core_2.12
-        builder = (
-            SparkSession.builder.config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0") # pyright: ignore[reportAttributeAccessIssue]
+        builder = configure_spark_with_delta_pip(
+            SparkSession.builder # pyright: ignore[reportAttributeAccessIssue]
             .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
             .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
             .config("spark.driver.host", "localhost")
