@@ -19,7 +19,7 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'corretto'
-        java-version: '8'
+        java-version: '17'
     - uses: actions/setup-python@v4
       with:
         python-version: '3.11'
