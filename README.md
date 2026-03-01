@@ -4,6 +4,8 @@
 
 ![Coverage](./coverage.svg)
 [![PyPI](https://img.shields.io/pypi/v/tgedr-dataops-ext)](https://pypi.org/project/tgedr-dataops-ext/)
+![PySpark](https://img.shields.io/badge/PySpark-4.1.1-orange)
+![Delta Spark](https://img.shields.io/badge/Delta%20Spark-4.1-blue)
 
 ---
 
