@@ -2575,7 +2575,7 @@ wheels = [
 
 [[package]]
 name = "tgedr-dataops-ext"
-version = "0.0.6"
+version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "delta-spark" },
@@ -2601,10 +2601,10 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "delta-spark", specifier = "~=4.0" },
+    { name = "delta-spark", specifier = "~=4.1" },
     { name = "deltalake", specifier = "~=1.4" },
     { name = "pandas", specifier = ">=2.3.0" },
-    { name = "pyspark", specifier = "~=4.0" },
+    { name = "pyspark", specifier = "~=4.1.1" },
     { name = "tgedr-dataops", specifier = ">=1.0.3" },
 ]
 
