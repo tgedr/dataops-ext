@@ -311,12 +311,12 @@ class SparkDeltaStore(Store, ABC):
 
             # check if the df has all the required columns
             # as we are upserting the updated columns coming in must at least match or exceed the current columns
-            for column in table.toDF().columns:
+            for column in table.toDF().columns: # pyright: ignore[reportOptionalMemberAccess]
                 # we'll assume missing columns are nullable, typically metrics
                 if column not in df.columns:
                     df = df.withColumn(column, f.lit(None).cast(T.StringType()))
 
-            table.alias("current").merge(
+            table.alias("current").merge( # pyright: ignore[reportOptionalMemberAccess]
                 df.alias("updates"), match_clause # pyright: ignore[reportArgumentType]
             ).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()
 
@@ -327,7 +327,7 @@ class SparkDeltaStore(Store, ABC):
             elif retention_days is not None:  # pragma: no cover
                 self.enforce_retention_policy(path=key, retention_days=retention_days)
 
-            table.optimize().executeCompaction()
+            table.optimize().executeCompaction() # pyright: ignore[reportOptionalMemberAccess]
 
         logger.info("[UtilsDeltaTable.upsert|out]")
 

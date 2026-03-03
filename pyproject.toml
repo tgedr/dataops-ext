@@ -1,12 +1,12 @@
 [project]
 name = "tgedr-dataops-ext"
-version = "1.0.1"
+version = "1.0.2"
 description = "data operations related code - extended"
 authors = [
     {name = "joao tiago viegas",email = "3536754+jtviegas@users.noreply.github.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<4"
 
 dependencies = [
     "pandas>=2.3.0",
