@@ -1,6 +1,6 @@
 [project]
 name = "tgedr-dataops-ext"
-version = "1.0.2"
+version = "1.0.3"
 description = "data operations related code - extended"
 authors = [
     {name = "joao tiago viegas",email = "3536754+jtviegas@users.noreply.github.com"}
@@ -9,10 +9,10 @@ readme = "README.md"
 requires-python = ">=3.11,<4"
 
 dependencies = [
-    "pandas>=2.3.0",
+    "pandas>=2.3.0,<3",
     "deltalake~=1.4",
     "delta-spark~=4.1",
-    "tgedr-dataops>=1.0.6",
+    "tgedr-dataops==1.0.7",
     "pyspark~=4.1.1",
 ]
 [dependency-groups]
