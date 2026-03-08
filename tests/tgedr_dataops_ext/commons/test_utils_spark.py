@@ -25,8 +25,15 @@ def test_not_aws_spark(environment_mock_another):
 
 
 def test_not_aws_spark_no_config(environment_mock_another):
-    # Exercises the else branch at line 105: no config passed, no AWS env
     o = UtilsSpark.get_spark_session()
+    assert type(o) == SparkSession
+
+
+def test_not_aws_spark_with_config_and_active_session(environment_mock_another):
+    # Create an active session first
+    SparkSession.builder.master("local").appName("test_active").getOrCreate()
+    # Call get_spark_session with config when there's already an active session
+    o = UtilsSpark.get_spark_session({"spark.executor.memory": "512m"})
     assert type(o) == SparkSession
 
 

@@ -9,7 +9,7 @@ from pandas.testing import assert_frame_equal
 from tgedr_dataops_ext.commons.utils_spark import UtilsSpark
 from pyspark.sql import SparkSession
 
-sys.path.insert(0, Path(__file__).parent.parent.joinpath("src").absolute())  # isort:skip
+sys.path.insert(0, Path(__file__).parent.parent.joinpath("src").absolute())  # pyright: ignore[reportArgumentType] # isort:skip
 
 def assert_frames_are_equal(actual: DataFrame, expected: DataFrame, sort_columns: list[str], abs_tol: float = None):
     results_sorted = actual.sort_values(by=sort_columns).reset_index(drop=True)
@@ -40,7 +40,7 @@ def resources_folder() -> str:
         test resources folder path
 
     """
-    return Path(__file__).parent.joinpath("resources").absolute()
+    return Path(__file__).parent.joinpath("resources").absolute() # pyright: ignore[reportReturnType]
 
 
 @pytest.fixture(scope="session")

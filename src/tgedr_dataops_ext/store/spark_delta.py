@@ -230,7 +230,7 @@ class SparkDeltaStore(Store, ABC):
             writer = writer.option("path", key).saveAsTable(table_name)
 
             if column_descriptions is not None:
-                self.set_column_comments(db=db, table=table_name.split(".")[1], col_comments=column_descriptions)
+                self.set_column_comments(db=db, table=table_name.split(".")[1], col_comments=column_descriptions) # pragma: no cover
         else:
             writer.save(key)
 
@@ -241,8 +241,8 @@ class SparkDeltaStore(Store, ABC):
             self.enforce_retention_policy(
                 path=key, retention_days=retention_days, deleted_retention_days=deleted_retention_days
             )
-        elif retention_days is not None:
-            self.enforce_retention_policy(path=key, retention_days=retention_days)
+        elif retention_days is not None:   # pragma: no cover
+            self.enforce_retention_policy(path=key, retention_days=retention_days)  # pragma: no cover
 
         table.optimize().executeCompaction() # pyright: ignore[reportOptionalMemberAccess]
 

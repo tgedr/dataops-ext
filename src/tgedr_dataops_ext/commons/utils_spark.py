@@ -10,9 +10,8 @@ import logging
 import os
 from typing import ClassVar
 from pyspark.sql import SparkSession
-from pyspark import SparkConf
 from pyspark.sql import types as T  # noqa: N812
-from pyspark.context import SparkContext
+from pyspark import SparkContext
 from delta.pip_utils import configure_spark_with_delta_pip
 
 
@@ -91,18 +90,15 @@ class UtilsSpark:
             else:
                 active_session = SparkSession.getActiveSession()
 
-            spark_config = SparkConf()
-
-            if active_session is not None:
-                former_config = active_session.sparkContext.getConf().getAll()
-                for entry in former_config:
-                    spark_config.set(entry[0], entry[1])
-            if config is not None:
-                for k, v in config.items():
-                    spark_config.set(k, v)
-                spark: SparkSession = SparkSession.builder.config(conf=spark_config).getOrCreate() # pyright: ignore[reportAttributeAccessIssue]
+            if active_session is None:
+                spark: SparkSession = SparkSession.builder.config(map=config).getOrCreate() if config is not None else SparkSession.builder.getOrCreate()
+            elif config is not None:
+                    spark_config = active_session.sparkContext.getConf()
+                    for k, v in config.items():
+                        spark_config.set(k, v)
+                    spark: SparkSession = SparkSession.builder.config(conf=spark_config).getOrCreate()
             else:
-                spark: SparkSession = SparkSession.builder.getOrCreate() # pyright: ignore[reportAttributeAccessIssue]
+                spark: SparkSession = SparkSession.builder.getOrCreate()
 
         logger.debug(f"[get_spark_session|out] => {spark}")
         return spark
