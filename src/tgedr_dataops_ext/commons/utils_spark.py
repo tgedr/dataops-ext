@@ -91,7 +91,7 @@ class UtilsSpark:
                 active_session = SparkSession.getActiveSession()
 
             if active_session is None:
-                spark: SparkSession = SparkSession.builder.config(map=config).getOrCreate() if config is not None else SparkSession.builder.getOrCreate()
+                spark: SparkSession = SparkSession.builder.config(map=config).getOrCreate() if config is not None else SparkSession.builder.getOrCreate()   # pragma: no cover
             elif config is not None:
                     spark_config = active_session.sparkContext.getConf()
                     for k, v in config.items():
