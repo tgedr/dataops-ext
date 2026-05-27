@@ -287,6 +287,32 @@ get_latest_tag() {
   info "[get_latest_tag|out] => ${result}"
 }
 
+get_pr_approvals(){
+  info "[get_pr_approvals|in]"
+
+  local branch="${GITHUB_REF_NAME:-$(git rev-parse --abbrev-ref HEAD)}"
+  info "[get_pr_approvals] looking for PRs on branch: $branch"
+
+  local pr_numbers
+  pr_numbers=$(gh pr list --head "$branch" --state all --json number --jq '.[].number' 2>/dev/null)
+  local result="$?"
+  [ "$result" -ne "0" ] && err "[get_pr_approvals] failed to list PRs" && exit 1
+
+  if [ -z "$pr_numbers" ]; then
+    warn "[get_pr_approvals] no PRs found for branch: $branch"
+    info "[get_pr_approvals|out] => 0"
+    return 0
+  fi
+
+  while IFS= read -r pr_number; do
+    info "[get_pr_approvals] --- PR #${pr_number} approvals ---"
+    gh pr view "$pr_number" --json reviews \
+      --jq '.reviews[] | select(.state == "APPROVED") | "  Approved by: \(.author.login) at \(.submittedAt)\(if .body != "" then " - \(.body)" else "" end)"'
+  done <<< "$pr_numbers"
+
+  info "[get_pr_approvals|out] => 0"
+}
+
 # <=== MAIN SECTION END  <===
 
 
@@ -308,6 +334,7 @@ usage() {
       - publish                           publishes the package
       - tag <VERSION> <COMMIT_HASH>       tags a specific commit with the version and pushes it to the remote
       - get_latest_tag
+      - get_pr_approvals
 EOM
   exit 1
 }
@@ -346,6 +373,9 @@ case "$1" in
     ;;
   get_latest_tag)
     get_latest_tag
+    ;;
+  get_pr_approvals)
+    get_pr_approvals
     ;;
   *)
     usage
