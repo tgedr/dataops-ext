@@ -291,6 +291,7 @@ get_pr_approvals(){
   info "[get_pr_approvals|in]"
 
   local branch="${GITHUB_REF_NAME:-$(git rev-parse --abbrev-ref HEAD)}"
+  branch="master"
   info "[get_pr_approvals] looking for PRs on branch: $branch"
 
   local pr_numbers
