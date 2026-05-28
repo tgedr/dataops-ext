@@ -14,7 +14,8 @@ dependencies = [
     "delta-spark~=4.1",
     "tgedr-dataops==1.0.9",
     "pyspark~=4.1.1",
-    "numpy<2"
+    "numpy<2",
+    "reportlab~=4.4.4",
 ]
 [dependency-groups]
 dev = [
